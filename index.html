@@ -3,14 +3,27 @@
 <head>
   <meta charset="utf-8">  
   <title>Emerging tech</title>
-  <style type="text/css">body{font-family: sans-serif;}</style>
+  <style type="text/css">body{font-family: sans-serif;} label{display:block;}</style>
 </head>
 <body>
 
   <h1>Emerging tech, yo</h1>
   <h2 id="data">-</h2>
 
-  <input><button>&rarr;</button>
+  <form>
+    <label>
+      Node
+      <input name="node" value="dc42">
+    </label>
+
+    <label>
+      Payload
+      <input name="payload" value="0">
+    </label>
+
+    <input type="submit">
+
+  </form>
 
   <script src="bower_components/pubnub/web/pubnub.min.js"></script>
   <script type="text/javascript">
@@ -34,20 +47,23 @@
     });
 
 
-
  
-    document.querySelector('button').onclick = function(){
-      var val = document.querySelector('input').value || 'poop';
+    document.querySelector('form').onsubmit = function(e){
+      e.preventDefault();
+
+      var message = {
+          node:    document.querySelector('[name=node]').value,
+          payload: document.querySelector('[name=payload]').value.split(',').map(function(n){
+            return parseInt(n, 10)
+          })
+        }
 
       pubnub.publish({
         channel:'inbound',
-        message:{
-          node: 'sup, yo',
-          payload: val
-        }
+        message:message
       })
 
-      console.log("--")
+      console.log(">>", message)
 
     }
 
