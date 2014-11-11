@@ -19,6 +19,7 @@
 
     pubnub.subscribe({
       channel: 'sensor-0',
+      backfill: true,
       callback: function(message){
         if(message.value){
           var v = message.value;
