@@ -3,8 +3,12 @@
 <head>
   <meta charset="utf-8">  
   <title>Emerging tech</title>
+  <style type="text/css">body{font-family: sans-serif;}</style>
 </head>
 <body>
+
+  <h1>Emerging tech, yo</h1>
+  <h2 id="data">-</h2>
 
   <script src="bower_components/pubnub/web/pubnub.min.js"></script>
   <script type="text/javascript">
@@ -19,6 +23,8 @@
         if(message.value){
           var v = message.value;
           document.body.style.backgroundColor = 'rgb('+v+','+v+','+v+')';
+          document.body.style.color = v < 127 ? '#fff' : '#000';
+          document.getElementById('data').innerText = v;
         }
       }
     });
