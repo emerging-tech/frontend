@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">  
+  <title>Emerging tech</title>
+</head>
+<body>
+
+  <script src="bower_components/pubnub/web/pubnub.min.js"></script>
+  <script type="text/javascript">
+
+    var pubnub = PUBNUB.init({
+      subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe'
+    });
+
+    pubnub.subscribe({
+      channel: 'sensor-0',
+      callback: function(message){
+        if(message.value){
+          var v = message.value;
+          document.body.style.backgroundColor = 'rgb('+v+','+v+','+v+')';
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
