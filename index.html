@@ -10,15 +10,18 @@
   <h1>Emerging tech, yo</h1>
   <h2 id="data">-</h2>
 
+  <input><button>&rarr;</button>
+
   <script src="bower_components/pubnub/web/pubnub.min.js"></script>
   <script type="text/javascript">
 
     var pubnub = PUBNUB.init({
-      subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe'
+      subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe',
+      publish_key: 'pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69'
     });
 
     pubnub.subscribe({
-      channel: 'sensor-0',
+      channel: 'dc42',
       backfill: true,
       callback: function(message){
         if(message.value){
@@ -29,6 +32,25 @@
         }
       }
     });
+
+
+
+ 
+    document.querySelector('button').onclick = function(){
+      var val = document.querySelector('input').value || 'poop';
+
+      pubnub.publish({
+        channel:'inbound',
+        message:{
+          node: 'sup, yo',
+          payload: val
+        }
+      })
+
+      console.log("--")
+
+    }
+
 
   </script>
 </body>
