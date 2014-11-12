@@ -1,4 +1,4 @@
 emerging-tech
 =============
 
-lovely emerging tech frontend hacks
+emerging tech frontend hacks
