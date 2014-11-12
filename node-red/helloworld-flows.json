@@ -1,0 +1,87 @@
+[{
+		"id" : "8887858f.777878",
+		"type" : "pubnub-keys",
+		"pub_key" : "pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69",
+		"sub_key" : "sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe"
+	}, {
+		"id" : "a7746a3a.588b98",
+		"type" : "inject",
+		"name" : "Hello World!",
+		"topic" : "/hello/",
+		"payload" : "Hello, World!",
+		"payloadType" : "string",
+		"repeat" : "",
+		"crontab" : "",
+		"once" : true,
+		"x" : 197,
+		"y" : 189,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : [["9f9833f6.6067d", "477f056e.b880fc"]]
+	}, {
+		"id" : "9f9833f6.6067d",
+		"type" : "debug",
+		"name" : "",
+		"active" : true,
+		"console" : "false",
+		"complete" : "false",
+		"x" : 401,
+		"y" : 115,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}, {
+		"id" : "477f056e.b880fc",
+		"type" : "pubnub out",
+		"keys" : "8887858f.777878",
+		"channel" : "testcard",
+		"x" : 454,
+		"y" : 188,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}, {
+		"id" : "40163ab7.bfe9c4",
+		"type" : "pubnub in",
+		"keys" : "8887858f.777878",
+		"channel" : "testcard",
+		"x" : 656,
+		"y" : 187,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : [["88675066.7798b", "ef82708b.107d9"]]
+	}, {
+		"id" : "88675066.7798b",
+		"type" : "debug",
+		"name" : "",
+		"active" : true,
+		"console" : "false",
+		"complete" : "false",
+		"x" : 904,
+		"y" : 130,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}, {
+		"id" : "51e57af5.ae1a84",
+		"type" : "comment",
+		"name" : "Publish Events",
+		"info" : "",
+		"x" : 150,
+		"y" : 56,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}, {
+		"id" : "b0cd6bd7.4f3298",
+		"type" : "comment",
+		"name" : "Subscribe to Events",
+		"info" : "",
+		"x" : 690,
+		"y" : 56,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}, {
+		"id" : "ef82708b.107d9",
+		"type" : "twitter out",
+		"name" : "Tweet",
+		"x" : 903,
+		"y" : 186,
+		"z" : "24e03da.fdb1fc2",
+		"wires" : []
+	}
+]
