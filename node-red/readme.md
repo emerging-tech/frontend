@@ -5,7 +5,7 @@ Emerging Tech Weekender
 
 If you want a quick way to plumb together your Internet of Things application, Node Red provides a quick graphical editor and good support for services.
 
-![Image of Node Red]()
+![Image of Node Red](https://raw.githubusercontent.com/jsoxford/emerging-tech/gh-pages/node-red/node-red-helloworld.png)
 
 We've created a Node Red VM you can install into Oracle VirtualBox (free) and be up and running very quickly. Ask one of the mentors and they'll either give you the VirtualBox image or spin you one up on the server.
 
