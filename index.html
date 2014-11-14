@@ -7,66 +7,54 @@
 </head>
 <body>
 
-  <h1>Emerging tech, yo</h1>
-  <h2 id="data">-</h2>
+  <h1>&rarr;Network</h1>
+  <pre id="network_def"></pre>
 
-  <form>
-    <label>
-      Node
-      <input name="node" value="dc42">
-    </label>
+  <h1>&rarr;Outbound</h1>
+  <pre id="outbound"></pre>
 
-    <label>
-      Payload
-      <input name="payload" value="0">
-    </label>
-
-    <input type="submit">
-
-  </form>
+  <h1>&larr;Inbound</h1>
+  <pre id="inbound" contenteditable>{
+  "node": "dc42",
+  "payload": "1",
+}</pre>
+  <input type="submit">
 
   <script src="bower_components/pubnub/web/pubnub.min.js"></script>
   <script type="text/javascript">
+
+    var byId = document.getElementById.bind(document);
 
     var pubnub = PUBNUB.init({
       subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe',
       publish_key: 'pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69'
     });
 
+    // write the messages into the pre divs
     pubnub.subscribe({
-      channel: 'dc42',
+      channel: 'outbound,network_def',
       backfill: true,
-      callback: function(message){
-        if(message.value){
-          var v = message.value;
-          document.body.style.backgroundColor = 'rgb('+v+','+v+','+v+')';
-          document.body.style.color = v < 127 ? '#fff' : '#000';
-          document.getElementById('data').innerText = v;
-        }
+      callback: function(message, _stuff, channel){
+        var element = byId(channel);
+        if(element)
+          element.innerText = JSON.stringify(message, null, 2);
       }
     });
 
+    document.querySelector('input').onclick = function(){
+      var text = byId('inbound').innerText
+      try{
+        var obj = JSON.parse(text)
+        pubnub.publish({
+          channel:'inbound',
+          message:obj
+        })
+      } catch (e){
 
- 
-    document.querySelector('form').onsubmit = function(e){
-      e.preventDefault();
-
-      var message = {
-          node:    document.querySelector('[name=node]').value,
-          payload: document.querySelector('[name=payload]').value.split(',').map(function(n){
-            return parseInt(n, 10)
-          })
-        }
-
-      pubnub.publish({
-        channel:'inbound',
-        message:message
-      })
-
-      console.log(">>", message)
-
+        alert("JSON, yo? - " + e.message)
+        console.error(e)
+      }
     }
-
 
   </script>
 </body>
