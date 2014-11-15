@@ -50,19 +50,7 @@
     
     var sensorTemplateHTML = qs('#sensor-template').innerHTML;
 
-
-    var network = {
-      foo: '123456789',
-      bar: 'BARBARBAR'
-    }
-
-
-
-    var data = [
-      {id:'foo',full:'1234567890',payload:'fc0f08'},
-      {id:'bar',full:'asdfghjkll',payload:'fc0f08'},
-      {id:'baz',full:'9876543210',payload:'fc0f08'},
-    ]
+    var data = [];
 
     var list = d3.select('#sensor-list');
     var items = list.selectAll('.list-group-item')
@@ -79,7 +67,20 @@
         .select('form')
         .on('submit', function(d){
           d3.event.preventDefault();
-          console.log(d);
+
+          var inputvalue = this.querySelector('input').value;
+          var parts = inputvalue.split(',').map(function(v){return parseInt(v, 10)});
+
+          console.log("sending", parts, "to ", d.id)
+
+          pubnub.publish({
+            channel:'inbound',
+            message:{
+              "node": d.id,
+              "payload": parts
+            }
+          })
+
         })
 
       items
@@ -103,8 +104,71 @@
     }
 
 
-
     render()
+
+
+    var pubnub = PUBNUB.init({
+      subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe',
+      publish_key: 'pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69'
+    });
+
+
+    pubnub.subscribe({
+      channel: 'outbound,network_def',
+      backfill: true,
+      callback: function(message, _stuff, channel){
+        // console.log(channel)
+        if(channel == 'network_def'){
+          var keys = Object.keys(message);
+          keys.forEach(function(id){
+            var match = data.filter(function(d){
+              return id === d.id
+            })[0];
+
+            if(match){
+              match.full = message[id];
+            } else {
+              data.push({
+                id:id,
+                full:message[id],
+                payload:'-'
+              })
+            }
+          })
+
+
+        }
+        if(channel == 'outbound'){
+          if(message.node && message.payload){
+            var match = data.filter(function(d){
+              return d.id == message.node;
+            })[0];
+
+            if(match){
+              match.payload = message.payload
+            }
+            else {
+              data.push({
+                id:message.node,
+                full:'-',
+                payload:message.payload
+              })
+            }
+            render();
+
+           }
+        }
+      }
+    });
+
+
+      // pubnub.publish({
+      //   channel:'inbound',
+      //   message:{
+      //     "action": "network_status"
+      //   }
+      // })
+
   </script>
 </body>
 </html>
