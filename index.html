@@ -1,58 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">  
-  <title>Emerging tech</title>
-  <style type="text/css">body{font-family: sans-serif;} label{display:block;}</style>
+  <meta charset="utf-8">
+  <title>Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
+  <div class="container">
 
-  <h1>&rarr; network_def</h1>
-  <pre id="network_def"></pre>
+    <div class="page-header">
+      <h1>#etwox</h1>
+    </div>
 
-  <h1>&rarr; outbound</h1>
-  <pre id="outbound"></pre>
+    <h2><a href="network.html">network</a></h2>
+    <h2><a href="text.html">streams / text</a></h2>
+    <h2><a href="d3.html">d3 graph</a></h2>
 
-  <h1>&larr; inbound</h1>
-  <pre id="inbound" contenteditable>{
-  "node": "dc42",
-  "payload": [1]
-}</pre>
-  <input type="submit">
+  </div>
 
-  <script src="bower_components/pubnub/web/pubnub.min.js"></script>
-  <script type="text/javascript">
-
-    var qs = document.querySelector.bind(document);
-
-    var pubnub = PUBNUB.init({
-      subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe',
-      publish_key: 'pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69'
-    });
-
-    pubnub.subscribe({
-      channel: 'outbound,network_def',
-      backfill: true,
-      callback: function(message, _stuff, channel){
-        qs('#' + channel).innerText = JSON.stringify(message, null, 2);
-      }
-    });
-
-    document.querySelector('input').onclick = function(){
-      try{
-        var obj = JSON.parse(qs('#inbound').innerText);
-
-        pubnub.publish({
-          channel:'inbound',
-          message:obj
-        })
-      } catch (e){
-
-        alert("JSON, yo? - " + e.message)
-        console.error(e)
-      }
-    }
-
-  </script>
 </body>
 </html>
