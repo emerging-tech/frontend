@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="page-header">
+      <h1>#etwox sensor network</h1>
+    </div>
+
+    <div class="list-group" id="sensor-list">
+
+    </div>
+
+  </div>
+
+
+  <div class="list-group-item" id="sensor-template" style="display:none">
+    <h4 class="list-group-item-heading">
+      <span class="ui-id">-</span>
+      <small>
+        <span class="ui-full">-</span>
+      </small>
+    </h4>
+    
+    <h4>&rarr; <span class="ui-payload"></span></h4>
+
+    <form class="form-inline" role="form">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="0, 12, 15">
+      </div>
+      <button type="submit" class="btn btn-default">Send</button>
+    </form>
+
+  </div>
+
+
+
+  <script src="bower_components/pubnub/web/pubnub.min.js"></script>
+  <script src="bower_components/d3/d3.min.js"></script>
+  <script>
+    function qs(selector){
+      return document.querySelector(selector)
+    }
+    
+    var sensorTemplateHTML = qs('#sensor-template').innerHTML;
+
+
+    var network = {
+      foo: '123456789',
+      bar: 'BARBARBAR'
+    }
+
+
+
+    var data = [
+      {id:'foo',full:'1234567890',payload:'fc0f08'},
+      {id:'bar',full:'asdfghjkll',payload:'fc0f08'},
+      {id:'baz',full:'9876543210',payload:'fc0f08'},
+    ]
+
+    var list = d3.select('#sensor-list');
+    var items = list.selectAll('.list-group-item')
+
+
+    function render(){
+      items = items.data(data);
+
+      items
+        .enter()
+        .append('div')
+        .attr('class', 'list-group-item')
+        .html(sensorTemplateHTML)
+        .select('form')
+        .on('submit', function(d){
+          d3.event.preventDefault();
+          console.log(d);
+        })
+
+      items
+        .exit()
+        .remove()
+
+
+      items
+        .select('.ui-id')
+        .text(function(d){return d.id})
+
+      items
+        .select('.ui-full')
+        .text(function(d){return d.full})
+
+      items
+        .select('.ui-payload')
+        .text(function(d){return d.payload})
+
+
+    }
+
+
+
+    render()
+  </script>
+</body>
+</html>
