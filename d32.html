@@ -56,7 +56,7 @@ var path = svg.append("path");
         if(channel == 'outbound'){
           if(message.node && message.payload && message.node == 'e884'){
 
-            var value = parseInt(message.payload.substr(0,4),16),
+            var value = parseInt(message.payload.substr(4,4),16),
                 points = (data[message.node] = data[message.node] || []);
 
                 console.log(value)
