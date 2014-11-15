@@ -23,28 +23,25 @@
   <script src="bower_components/pubnub/web/pubnub.min.js"></script>
   <script type="text/javascript">
 
-    var byId = document.getElementById.bind(document);
+    var qs = document.querySelector.bind(document);
 
     var pubnub = PUBNUB.init({
       subscribe_key: 'sub-c-9c92c072-698f-11e4-97dd-02ee2ddab7fe',
       publish_key: 'pub-c-10a63f9f-359c-472b-a6ba-d55766a60e69'
     });
 
-    // write the messages into the pre divs
     pubnub.subscribe({
       channel: 'outbound,network_def',
       backfill: true,
       callback: function(message, _stuff, channel){
-        var element = byId(channel);
-        if(element)
-          element.innerText = JSON.stringify(message, null, 2);
+        qs('#' + channel).innerText = JSON.stringify(message, null, 2);
       }
     });
 
     document.querySelector('input').onclick = function(){
-      var text = byId('inbound').innerText
       try{
-        var obj = JSON.parse(text)
+        var obj = JSON.parse(qs('#inbound').innerText);
+
         pubnub.publish({
           channel:'inbound',
           message:obj
