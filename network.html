@@ -122,18 +122,18 @@
         .select('.ui-payload')
         .text(function(d){return d.payload})
 
-      var paths = items
-        .select('svg')
-        .selectAll('path')
-        .data(function(d){return numbers(d.points)})
+      // var paths = items
+      //   .select('svg')
+      //   .selectAll('path')
+      //   .data(function(d){return numbers(d.points)})
 
-      paths
-        .enter()
-        .append('path');
+      // paths
+      //   .enter()
+      //   .append('path');
 
-      paths
-        .exit()
-        .remove();
+      // paths
+      //   .exit()
+      //   .remove();
 
       // paths
         // .attr('d', line)
