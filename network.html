@@ -10,7 +10,6 @@
   svg{
     width:100%;
     height:100px;
-    border: 1px solid red;
   }
   path{
     stroke:#555;
@@ -33,7 +32,7 @@
   </div>
 
 
-  <div class="list-group-item" id="sensor-template">
+  <div class="list-group-item" id="sensor-template" style="display:none">
 
     <div class="row">
       <div class="col-sm-5">
@@ -69,6 +68,19 @@
     function qs(selector){
       return document.querySelector(selector)
     }
+
+    var width = 300,
+        height = 100;
+
+    var x = d3.time.scale()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
+
+    var line = d3.svg.line()
+                .x(function(d) { return x(d.time); })
+                .y(function(d) { return y(d.value); });
     
     var sensorTemplateHTML = qs('#sensor-template').innerHTML;
 
@@ -122,21 +134,28 @@
         .select('.ui-payload')
         .text(function(d){return d.payload})
 
-      // var paths = items
-      //   .select('svg')
-      //   .selectAll('path')
-      //   .data(function(d){return numbers(d.points)})
+      var paths = items
+        .select('svg')
+        .selectAll('path')
+        .data(function(d){return d.history})
 
-      // paths
-      //   .enter()
-      //   .append('path');
+      paths
+        .enter()
+        .append('path');
 
-      // paths
-      //   .exit()
-      //   .remove();
+      paths
+        .exit()
+        .remove();
 
-      // paths
-        // .attr('d', line)
+      paths
+        .attr('d', function(d){
+          x.domain(d3.extent(d, function(d) { return d.time; }));
+          y.domain(d3.extent(d, function(d) { return d.value; }));
+          return line(d)
+        })
+        .style('stroke', function(d,i){
+          return i == 0 ? '#f08' : '#08f'
+        })
 
 
     }
@@ -159,6 +178,7 @@
     });
 
 
+
     pubnub.subscribe({
       channel: ['outbound','network_def'],
       backfill: true,
@@ -177,7 +197,8 @@
               data.push({
                 id:id,
                 full:message[id],
-                payload:'-'
+                payload:'-',
+                history:[]
               })
             }
           })
@@ -192,12 +213,30 @@
 
             if(match){
               match.payload = message.payload
+              match.history = match.history || [];
+
+              numbers(message.payload).forEach(function(v,i){
+                match.history[i] = (match.history[i] || [])
+
+                match.history[i].unshift({
+                  time:+new Date,
+                  value:v
+                });
+
+                while(match.history[i].length > 50){
+                  match.history[i].pop();
+                }
+              })
             }
             else {
               data.push({
                 id:message.node,
                 full:'-',
-                payload:message.payload
+                payload:message.payload,
+                history:numbers(message.payload).map(function(d){return [{
+                  time:+new Date,
+                  value:d
+                }]})
               })
             }
             render();
